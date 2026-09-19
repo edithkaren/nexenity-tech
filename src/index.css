@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-accent: #3b82f6;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  
+  --color-bg-base: var(--bg-base);
+  --color-text-base: var(--text-base);
+  --color-text-muted: var(--text-muted);
+  --color-border-base: var(--border-base);
+}
+
+:root {
+  --bg-base: #000000;
+  --text-base: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-base: rgba(255, 255, 255, 0.1);
+  --brand-primary: #ffffff;
+}
+
+[data-theme='light'] {
+  --bg-base: #ffffff;
+  --text-base: #000000;
+  --text-muted: rgba(0, 0, 0, 0.6);
+  --border-base: rgba(0, 0, 0, 0.1);
+  --brand-primary: #000000;
+}
+
+@layer base {
+  html.lenis {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  body {
+    background: var(--bg-base);
+    color: var(--text-base);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .liquid-text {
+    background: linear-gradient(
+      to right,
+      #3b82f6,
+      #9333ea,
+      #ef4444,
+      #3b82f6
+    );
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: liquid-flow 8s linear infinite;
+  }
+
+  .liquid-bg {
+    filter: url('#gooey');
+  }
+
+  @keyframes liquid-flow {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  .text-reveal {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .mask-radial {
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+}
+
+/* Custom SVG Filters */
+#svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
