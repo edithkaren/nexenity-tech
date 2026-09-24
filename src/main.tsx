@@ -1,10 +1,16 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { ToastProvider } from './components/ui/Toast';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LanguageProvider>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </LanguageProvider>
   </StrictMode>,
 );

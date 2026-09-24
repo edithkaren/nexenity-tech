@@ -3,6 +3,7 @@ export interface Service {
   number: string;
   title: string;
   description: string;
+  tooltip?: string;
   details: {
     process: string[];
     deliverables: string[];
@@ -37,4 +38,12 @@ export interface ProcessStep {
   number: string;
   title: string;
   description: string;
+}
+
+export interface RoadmapStep {
+  date: string;
+  title: string;
+  description: string;
+  status: 'completed' | 'in-progress' | 'upcoming';
+  milestones: string[];
 }

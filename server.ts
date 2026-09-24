@@ -58,21 +58,22 @@ app.post("/api/chat", async (req, res) => {
       return res.status(503).json({ error: "AI Assistant is currently unavailable (API key not configured)." });
     }
 
-    const result = await ai.getGenerativeModel({ model: "gemini-1.5-flash" }).generateContent({
+    const result = await ai.models.generateContent({
+      model: "gemini-3.8-flash",
       contents: [
         { role: 'user', parts: [{ text: NEXENITY_CONTEXT }] },
         { role: 'model', parts: [{ text: "Understood. I am ready to represent Nexenity Technologies." }] },
         ...(history || []),
         { role: 'user', parts: [{ text: message }] }
       ],
-      generationConfig: {
+      config: {
         temperature: 0.7,
         topP: 0.95,
         topK: 40,
       }
     });
 
-    res.json({ text: result.response.text() });
+    res.json({ text: result.text });
   } catch (error: any) {
     console.error("Chat Error:", error);
     res.status(500).json({ error: "Failed to communicate with AI assistant." });

@@ -1,10 +1,11 @@
 import { motion } from 'motion/react';
 import { ArrowRight, ExternalLink, Clock } from 'lucide-react';
-import { DataStream } from '../ui/DataStream';
 import { PROJECTS } from '../../constants';
 import { cn } from '../../lib/utils';
 import { formatLocalizedDate, formatRelativeTime } from '../../lib/dateUtils';
 import { useLanguage } from '../../contexts/LanguageContext';
+
+import { Roadmap } from '../ui/Roadmap';
 
 export function Portfolio() {
   const { t } = useLanguage();
@@ -12,7 +13,6 @@ export function Portfolio() {
 
   return (
     <section id="portfolio" className="py-24 md:py-32 px-6 md:px-12 bg-transparent overflow-hidden relative">
-      <DataStream />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -116,7 +116,7 @@ export function Portfolio() {
           ))}
         </div>
 
-        <div className="mt-32 flex justify-center">
+        <div className="mt-20 flex justify-center">
           <button className="text-white font-bold tracking-widest uppercase text-xs flex items-center gap-4 group">
             <span className="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
               <ArrowRight size={20} />
@@ -124,6 +124,9 @@ export function Portfolio() {
             {t('common.viewAll')}
           </button>
         </div>
+
+        {/* Roadmap Section */}
+        <Roadmap />
       </motion.div>
     </section>
   );

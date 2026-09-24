@@ -4,6 +4,7 @@ import { Menu, X, ArrowRight, Instagram, Linkedin, Github, Twitter, Youtube, Sun
 import { cn } from '../../lib/utils';
 import { PWAInstallButton } from '../ui/PWAInstallButton';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import { Magnetic } from '../ui/Magnetic';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const NAV_LINKS = [
@@ -24,9 +25,7 @@ const SOCIALS = [
 
 interface NavbarProps {
   theme: 'dark' | 'light';
-  toggleTheme: () => void;
-  cyberAmbient: boolean;
-  toggleCyberAmbient: () => void;
+  toggleTheme: (e?: React.MouseEvent) => void;
   hapticsEnabled: boolean;
   toggleHaptics: () => void;
   reducedMotion: boolean;
@@ -36,8 +35,6 @@ interface NavbarProps {
 export function Navbar({ 
   theme, 
   toggleTheme, 
-  cyberAmbient, 
-  toggleCyberAmbient,
   hapticsEnabled,
   toggleHaptics,
   reducedMotion,
@@ -74,37 +71,42 @@ export function Navbar({
 
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium hover:text-brand-accent transition-colors"
-              >
-                {t(link.key)}
-              </a>
+              <Magnetic key={link.name} strength={0.2}>
+                <a
+                  href={link.href}
+                  className="text-sm font-medium hover:text-brand-accent transition-colors"
+                >
+                  {t(link.key)}
+                </a>
+              </Magnetic>
             ))}
             
             <div className="flex items-center gap-2">
               <LanguageSwitcher theme={theme} />
               
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full border border-border-base hover:bg-brand-accent/10 transition-colors"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
+              <Magnetic strength={0.4}>
+                <button
+                  onClick={(e) => toggleTheme(e)}
+                  className="p-2 rounded-full border border-border-base hover:bg-brand-accent/10 transition-colors"
+                  title="Toggle Theme"
+                >
+                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+              </Magnetic>
 
               <div className="relative">
-                <button
-                  onClick={() => setIsAccessMenuOpen(!isAccessMenuOpen)}
-                  className={cn(
-                    "p-2 rounded-full border transition-all duration-300",
-                    isAccessMenuOpen ? "border-brand-accent bg-brand-accent/10 text-brand-accent" : "border-border-base text-text-muted hover:border-brand-accent/30 hover:text-brand-accent"
-                  )}
-                  title="Accessibility Settings"
-                >
-                  <Accessibility size={18} />
-                </button>
+                <Magnetic strength={0.4}>
+                  <button
+                    onClick={() => setIsAccessMenuOpen(!isAccessMenuOpen)}
+                    className={cn(
+                      "p-2 rounded-full border transition-all duration-300",
+                      isAccessMenuOpen ? "border-brand-accent bg-brand-accent/10 text-brand-accent" : "border-border-base text-text-muted hover:border-brand-accent/30 hover:text-brand-accent"
+                    )}
+                    title="Accessibility Settings"
+                  >
+                    <Accessibility size={18} />
+                  </button>
+                </Magnetic>
 
                 <AnimatePresence>
                   {isAccessMenuOpen && (
@@ -118,25 +120,6 @@ export function Navbar({
                       )}
                     >
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Zap size={16} className={cn(cyberAmbient && "text-brand-accent")} />
-                            <span className="text-sm font-medium">Ambient Effects</span>
-                          </div>
-                          <button
-                            onClick={toggleCyberAmbient}
-                            className={cn(
-                              "w-10 h-5 rounded-full transition-colors relative",
-                              cyberAmbient ? "bg-brand-accent" : "bg-white/10"
-                            )}
-                          >
-                            <div className={cn(
-                              "absolute top-1 w-3 h-3 bg-white rounded-full transition-transform",
-                              cyberAmbient ? "left-6" : "left-1"
-                            )} />
-                          </button>
-                        </div>
-
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <Volume2 size={16} className={cn(hapticsEnabled && "text-brand-accent")} />
@@ -194,19 +177,10 @@ export function Navbar({
           <div className="flex items-center gap-4 md:hidden">
             <LanguageSwitcher theme={theme} />
             <button
-              onClick={toggleTheme}
+              onClick={(e) => toggleTheme(e)}
               className="p-2 rounded-full border border-border-base"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
-              onClick={toggleCyberAmbient}
-              className={cn(
-                "p-2 rounded-full border transition-all",
-                cyberAmbient ? "border-brand-accent text-brand-accent" : "border-border-base text-text-muted"
-              )}
-            >
-              <Zap size={18} />
             </button>
             <button
               onClick={toggleHaptics}
@@ -283,25 +257,6 @@ export function Navbar({
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/10 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Zap size={20} className={cn(cyberAmbient && "text-brand-accent")} />
-                      <span className="text-lg font-medium">Ambient Effects</span>
-                    </div>
-                    <button
-                      onClick={toggleCyberAmbient}
-                      className={cn(
-                        "w-12 h-6 rounded-full transition-colors relative",
-                        cyberAmbient ? "bg-brand-accent" : "bg-white/10"
-                      )}
-                    >
-                      <div className={cn(
-                        "absolute top-1 w-4 h-4 bg-white rounded-full transition-transform",
-                        cyberAmbient ? "left-7" : "left-1"
-                      )} />
-                    </button>
-                  </div>
-
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Volume2 size={20} className={cn(hapticsEnabled && "text-brand-accent")} />

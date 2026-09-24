@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Send, CheckCircle2, ArrowRight } from 'lucide-react';
 import { useToast } from '../ui/Toast';
+import { ServiceDashboard } from '../ui/ServiceDashboard';
 
 export function Contact() {
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -62,6 +63,8 @@ export function Contact() {
                 <span className="text-lg">hello@nexenity.tech</span>
               </div>
             </div>
+
+            <ServiceDashboard />
           </div>
 
           <div className="bg-zinc-900 border border-white/10 p-8 md:p-12 rounded-3xl relative overflow-hidden">

@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 import { ArrowRight, ArrowDown } from 'lucide-react';
-import { LiquidSphere } from '../ui/LiquidSphere';
-import { GeometricBackground } from '../ui/GeometricBackground';
+import { Globe3D } from '../ui/Globe3D';
+import { Magnetic } from '../ui/Magnetic';
+import { VisitorGreeting } from '../ui/VisitorGreeting';
 import { cn } from '../../lib/utils';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -26,18 +27,58 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
   const sphereScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
   const sphereOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
+  const titleVariants: any = {
+    hidden: { 
+      opacity: 0, 
+      x: reducedMotion ? 0 : -15,
+      skewX: reducedMotion ? 0 : -10,
+      filter: 'blur(10px)'
+    },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: [0, -5, 2, 0],
+      skewX: 0,
+      filter: 'blur(0px)',
+      transition: {
+        delay: 0.4 + i * 0.08,
+        duration: 0.4,
+        ease: "easeOut",
+        x: reducedMotion ? { delay: 0.4 + i * 0.08, duration: 0.5 } : {
+          times: [0, 0.2, 0.5, 1],
+          duration: 0.4,
+          delay: 0.4 + i * 0.08
+        }
+      }
+    })
+  };
+
+  const subtitleVariants: any = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        delay: 0.4 + words.length * 0.08 + 0.2,
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  };
+
   return (
     <section 
       id="hero" 
       ref={containerRef}
       className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden"
     >
-      <GeometricBackground reducedMotion={reducedMotion} />
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         <div className="z-10">
+          <VisitorGreeting />
+          
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
             className="flex items-center gap-3 mb-6"
           >
             <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-brand-accent uppercase">
@@ -50,9 +91,10 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
             {words.map((word, i) => (
               <motion.span
                 key={`${word}-${i}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.05 }}
+                custom={i}
+                variants={titleVariants}
+                initial="hidden"
+                animate="visible"
                 className="inline-block mr-[0.2em]"
               >
                 {word === "DIGITAL" || word === "EXPERIENCES" || word === "DIGITALES" || word === "NUMÉRIQUES" || word === "デジタル体験" ? (
@@ -66,9 +108,9 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
 
           <motion.p
             key={t('hero.subtitle')}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
+            variants={subtitleVariants}
+            initial="hidden"
+            animate="visible"
             className="text-lg md:text-xl text-text-muted max-w-xl leading-relaxed mb-10"
           >
             {t('hero.subtitle')}
@@ -77,18 +119,22 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 0.4 + words.length * 0.08 + 0.4 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <button className={cn(
-              "px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300",
-              theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
-            )}>
-              {t('nav.cta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="border border-border-base hover:border-text-base px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all duration-300">
-              {t('hero.explore')} <ArrowDown size={18} />
-            </button>
+            <Magnetic>
+              <button className={cn(
+                "px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300",
+                theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
+              )}>
+                {t('nav.cta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Magnetic>
+            <Magnetic strength={0.2}>
+              <button className="border border-border-base hover:border-text-base px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all duration-300">
+                {t('hero.explore')} <ArrowDown size={18} />
+              </button>
+            </Magnetic>
           </motion.div>
         </div>
 
@@ -100,7 +146,7 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
           className="relative aspect-square lg:aspect-auto h-[400px] lg:h-[600px] flex items-center justify-center"
         >
           <div className="absolute inset-0 flex items-center justify-center">
-             <LiquidSphere theme={theme} />
+             <Globe3D theme={theme} />
           </div>
           
           {/* Animated labels around sphere */}
@@ -131,15 +177,6 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
                 {label.text}
               </motion.div>
             ))}
-          </div>
-
-          {/* Floating fragments decor */}
-          <div className="absolute inset-0 -z-10">
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 border border-border-base rounded-full"
-            />
           </div>
         </motion.div>
       </div>

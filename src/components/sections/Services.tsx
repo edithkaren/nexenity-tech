@@ -1,17 +1,28 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
-import { DataStream } from '../ui/DataStream';
+import { MagneticCard } from '../ui/MagneticCard';
 import { SERVICES } from '../../constants';
 import { Service } from '../../types';
 import { cn } from '../../lib/utils';
+import { CursorTooltip } from '../ui/CursorTooltip';
 
 export function Services() {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [hoveredService, setHoveredService] = useState<string | null>(null);
 
   return (
     <section id="services" className="py-24 md:py-32 px-6 md:px-12 bg-transparent relative overflow-hidden">
-      <DataStream />
+      <CursorTooltip 
+        content={
+          hoveredService === 'cta' 
+            ? 'Let\'s talk' 
+            : hoveredService === 'close'
+            ? 'Close'
+            : SERVICES.find(s => s.id === hoveredService)?.tooltip || 'Explore Service'
+        } 
+        active={!!hoveredService} 
+      />
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -50,21 +61,20 @@ export function Services() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-3xl overflow-hidden">
           {SERVICES.map((service, i) => (
-            <motion.div
+            <MagneticCard
               key={service.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
               onClick={() => setSelectedService(service)}
-              className="group relative bg-black p-10 hover:bg-white/[0.02] transition-colors cursor-pointer flex flex-col h-full"
+              onMouseEnter={() => setHoveredService(service.id)}
+              onMouseLeave={() => setHoveredService(null)}
+              className="group relative bg-black p-10 hover:bg-white/[0.02] transition-colors cursor-pointer flex flex-col h-full overflow-hidden"
+              strength={30}
             >
               {/* Card Background Visual */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-brand-accent rounded-full blur-[100px]" />
               </div>
 
-              <div className="flex justify-between items-start mb-12">
+              <div className="flex justify-between items-start mb-12 relative z-10">
                 <span className="text-xs font-bold tracking-widest text-white/20 group-hover:text-brand-accent transition-colors">
                   {service.number}
                 </span>
@@ -73,17 +83,17 @@ export function Services() {
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold mb-4 group-hover:text-brand-accent transition-colors">
+              <h3 className="text-2xl font-bold mb-4 group-hover:text-brand-accent transition-colors relative z-10">
                 {service.title}
               </h3>
-              <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
+              <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1 relative z-10">
                 {service.description}
               </p>
 
-              <div className="pt-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+              <div className="pt-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-xs font-bold uppercase tracking-widest relative z-10">
                 Learn More <ArrowRight size={14} />
               </div>
-            </motion.div>
+            </MagneticCard>
           ))}
         </div>
       </motion.div>
@@ -105,6 +115,8 @@ export function Services() {
             >
               <button
                 onClick={() => setSelectedService(null)}
+                onMouseEnter={() => setHoveredService('close')}
+                onMouseLeave={() => setHoveredService(null)}
                 className="absolute top-6 right-6 z-10 w-12 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full flex items-center justify-center transition-colors"
               >
                 <X size={24} />
@@ -132,7 +144,11 @@ export function Services() {
                   </div>
                 </div>
 
-                <button className="bg-white text-black w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 group">
+                <button 
+                  onMouseEnter={() => setHoveredService('cta')}
+                  onMouseLeave={() => setHoveredService(null)}
+                  className="bg-white text-black w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 group"
+                >
                   Start a Project <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

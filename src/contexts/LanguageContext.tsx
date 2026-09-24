@@ -89,11 +89,37 @@ const translations: Record<Language, Record<string, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlLang = params.get('lang') as Language;
+      if (urlLang && translations[urlLang]) return urlLang;
+
+      const savedLang = localStorage.getItem('nexenity-language') as Language;
+      if (savedLang && translations[savedLang]) return savedLang;
+    } catch (e) {
+      console.warn('Persistence error:', e);
+    }
+    return 'en';
+  });
 
   const t = (key: string): string => {
     return translations[language][key] || translations['en'][key] || key;
   };
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('nexenity-language', language);
+      
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('lang') !== language) {
+        url.searchParams.set('lang', language);
+        window.history.replaceState({}, '', url.toString());
+      }
+    } catch (e) {
+      console.warn('Persistence error:', e);
+    }
+  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

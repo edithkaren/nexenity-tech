@@ -119,7 +119,7 @@ export function About() {
               className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/[0.08] transition-all group"
             >
               <div className="w-12 h-12 bg-brand-accent/20 rounded-xl mb-6 flex items-center justify-center group-hover:bg-brand-accent transition-colors">
-                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-white rounded-full" />
               </div>
               <h4 className="text-xl font-bold mb-4">{value.title}</h4>
               <p className="text-sm text-white/60 leading-relaxed">{value.description}</p>

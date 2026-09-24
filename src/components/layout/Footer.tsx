@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { Twitter, Instagram, Linkedin, Github, Send, ArrowUpRight, Share2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useToast } from '../ui/Toast';
+import { Magnetic } from '../ui/Magnetic';
 
 const MOCK_UPDATES = [
   { id: 1, platform: 'Twitter', text: 'Just launched our new AI-driven motion engine for Nexenity. Experience real-time kinetic UI.', time: '2h ago' },
@@ -56,17 +57,21 @@ export function Footer() {
           </p>
           <div className="flex gap-4">
             {[Twitter, Instagram, Linkedin, Github].map((Icon, i) => (
-              <a key={i} href="#" className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-white/40 hover:text-brand-accent hover:border-brand-accent transition-all">
-                <Icon size={18} />
-              </a>
+              <Magnetic key={i} strength={0.4}>
+                <a href="#" className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-white/40 hover:text-brand-accent hover:border-brand-accent transition-all">
+                  <Icon size={18} />
+                </a>
+              </Magnetic>
             ))}
-            <button 
-              onClick={handleShare}
-              className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-white/40 hover:text-brand-accent hover:border-brand-accent transition-all"
-              title={t('common.share')}
-            >
-              <Share2 size={18} />
-            </button>
+            <Magnetic strength={0.4}>
+              <button 
+                onClick={handleShare}
+                className="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-white/40 hover:text-brand-accent hover:border-brand-accent transition-all"
+                title={t('common.share')}
+              >
+                <Share2 size={18} />
+              </button>
+            </Magnetic>
           </div>
         </div>
 
@@ -76,10 +81,12 @@ export function Footer() {
           <ul className="space-y-4">
             {['About', 'Services', 'Portfolio', 'Process', 'Careers'].map(link => (
               <li key={link}>
-                <a href={`#${link.toLowerCase()}`} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
-                  {link}
-                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
+                <Magnetic strength={0.2}>
+                  <a href={`#${link.toLowerCase()}`} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
+                    {link}
+                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                </Magnetic>
               </li>
             ))}
           </ul>

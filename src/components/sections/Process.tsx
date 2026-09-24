@@ -64,11 +64,6 @@ export function Process() {
               {/* Timeline Node & Aura */}
               <div className="absolute -top-[5px] left-0 md:left-4 w-2 h-2 hidden md:block">
                 <div className="absolute inset-0 bg-brand-accent rounded-full shadow-[0_0_15px_rgba(255,45,149,0.8)]" />
-                <motion.div 
-                  animate={{ scale: [1, 2, 1], opacity: [0.8, 0, 0.8] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-brand-accent rounded-full" 
-                />
               </div>
 
               <div className="pt-0 md:pt-12 cursor-default">

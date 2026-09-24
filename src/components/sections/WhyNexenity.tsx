@@ -14,7 +14,7 @@ export function WhyNexenity() {
   ];
 
   return (
-    <section className="py-24 md:py-48 px-6 md:px-12 bg-transparent overflow-hidden">
+    <section id="why-nexenity" className="py-24 md:py-48 px-6 md:px-12 bg-transparent overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -35,10 +35,10 @@ export function WhyNexenity() {
         </div>
 
         <div className="relative h-[400px] md:h-[600px] flex items-center justify-center">
-          {/* Animated connections visual */}
+          {/* Static connections visual */}
           <div className="absolute inset-0 flex items-center justify-center opacity-20">
-            <div className="w-[300px] md:w-[600px] h-[300px] md:h-[600px] border border-brand-accent rounded-full animate-[spin_20s_linear_infinite]" />
-            <div className="absolute w-[200px] md:w-[400px] h-[200px] md:h-[400px] border border-white/10 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+            <div className="w-[300px] md:w-[600px] h-[300px] md:h-[600px] border border-white/5 rounded-full" />
+            <div className="absolute w-[200px] md:w-[400px] h-[200px] md:h-[400px] border border-white/5 rounded-full" />
           </div>
 
           <div className="relative w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 md:gap-8">

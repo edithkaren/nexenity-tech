@@ -11,12 +11,11 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, MotionConfig } from 'motion/react';
 
-import { LanguageProvider } from './contexts/LanguageContext';
-import { ToastProvider } from './components/ui/Toast';
+import { useLanguage } from './contexts/LanguageContext';
+import { useToast } from './components/ui/Toast';
 
 // Components
 import { SmoothScroll } from './components/ui/SmoothScroll';
-import { CursorTrail } from './components/ui/CursorTrail';
 import { HapticInterface } from './components/ui/HapticInterface';
 import { useActiveSection } from './hooks/useActiveSection';
 
@@ -24,15 +23,15 @@ function SectionTracker() {
   useActiveSection();
   return null;
 }
-import { GlitchOverlay } from './components/ui/GlitchOverlay';
-import { AutonomousAgent } from './components/ui/AutonomousAgent';
-import { AmbientGlow } from './components/ui/AmbientGlow';
 import { ReadingProgressBar } from './components/ui/ReadingProgressBar';
 import { SectionSEO } from './components/ui/SectionSEO';
-import { LiveBackground } from './components/ui/LiveBackground';
 import { AIChatbot } from './components/ui/AIChatbot';
 import { OfflineIndicator } from './components/ui/OfflineIndicator';
 import { SectionDivider } from './components/ui/SectionDivider';
+import { ThemeReveal } from './components/ui/ThemeReveal';
+import { ScrollToTop } from './components/ui/ScrollToTop';
+import { InteractionTrail } from './components/ui/InteractionTrail';
+import { SparklingBackground } from './components/ui/SparklingBackground';
 import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/sections/Hero';
 import { Marquee } from './components/sections/Marquee';
@@ -56,10 +55,39 @@ const SectionLoader = () => (
 );
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [cyberAmbient, setCyberAmbient] = useState(false);
-  const [hapticsEnabled, setHapticsEnabled] = useState(true);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const { showToast } = useToast();
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlTheme = params.get('theme') as 'dark' | 'light';
+      if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
+      return (localStorage.getItem('nexenity-theme') as 'dark' | 'light') || 'dark';
+    } catch (e) { return 'dark'; }
+  });
+
+  const [hapticsEnabled, setHapticsEnabled] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('haptics')) return params.get('haptics') === 'true';
+      const saved = localStorage.getItem('nexenity-haptics');
+      return saved === null ? true : saved === 'true';
+    } catch (e) { return true; }
+  });
+
+  const [reducedMotion, setReducedMotion] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('motion')) return params.get('motion') === 'reduced';
+      return localStorage.getItem('nexenity-reduced-motion') === 'true';
+    } catch (e) { return false; }
+  });
+
+  const [reveal, setReveal] = useState<{ active: boolean; x: number; y: number; theme: 'dark' | 'light' }>({
+    active: false,
+    x: 0,
+    y: 0,
+    theme: theme
+  });
 
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
@@ -69,71 +97,70 @@ export default function App() {
     return () => window.removeEventListener('error', handleError);
   }, []);
 
-  useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem('nexenity-theme') as 'dark' | 'light' | null;
-      if (savedTheme) setTheme(savedTheme);
-      
-      const savedAmbient = localStorage.getItem('nexenity-ambient') === 'true';
-      setCyberAmbient(savedAmbient);
-
-      const savedHaptics = localStorage.getItem('nexenity-haptics');
-      if (savedHaptics !== null) setHapticsEnabled(savedHaptics === 'true');
-
-      const savedReducedMotion = localStorage.getItem('nexenity-reduced-motion') === 'true';
-      setReducedMotion(savedReducedMotion);
-    } catch (e) {
-      console.warn('Persistence error:', e);
-    }
-  }, []);
-
+  // Sync with localStorage and URL
   useEffect(() => {
     try {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('nexenity-theme', theme);
-    } catch (e) {
-      console.warn('Persistence error:', e);
-    }
-  }, [theme]);
+      
+      // Update browser theme-color meta tag
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+      }
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('nexenity-ambient', String(cyberAmbient));
-    } catch (e) {
-      console.warn('Persistence error:', e);
-    }
-  }, [cyberAmbient]);
-
-  useEffect(() => {
-    try {
       localStorage.setItem('nexenity-haptics', String(hapticsEnabled));
-    } catch (e) {
-      console.warn('Persistence error:', e);
-    }
-  }, [hapticsEnabled]);
-
-  useEffect(() => {
-    try {
       localStorage.setItem('nexenity-reduced-motion', String(reducedMotion));
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('theme', theme);
+      url.searchParams.set('haptics', String(hapticsEnabled));
+      url.searchParams.set('motion', reducedMotion ? 'reduced' : 'normal');
+      
+      window.history.replaceState({}, '', url.toString());
     } catch (e) {
       console.warn('Persistence error:', e);
     }
-  }, [reducedMotion]);
+  }, [theme, hapticsEnabled, reducedMotion]);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
+  const toggleTheme = (e?: React.MouseEvent | { x: number; y: number }) => {
+    const targetTheme = theme === 'dark' ? 'light' : 'dark';
+    const x = e && 'clientX' in e ? e.clientX : (e && 'x' in e ? e.x : window.innerWidth / 2);
+    const y = e && 'clientY' in e ? e.clientY : (e && 'y' in e ? e.y : window.innerHeight / 2);
 
-  const toggleCyberAmbient = () => {
-    setCyberAmbient(prev => !prev);
+    if (reducedMotion) {
+      setTheme(targetTheme);
+      showToast(`${targetTheme.charAt(0).toUpperCase() + targetTheme.slice(1)} theme applied`, 'info');
+      return;
+    }
+
+    setReveal({ active: true, x, y, theme: targetTheme });
+    
+    // Switch the actual theme after a small delay so the reveal starts first
+    setTimeout(() => {
+      setTheme(targetTheme);
+      showToast(`${targetTheme.charAt(0).toUpperCase() + targetTheme.slice(1)} theme applied`, 'info');
+      // Turn off reveal after animation finishes (duration + exit delay)
+      setTimeout(() => {
+        setReveal(prev => ({ ...prev, active: false }));
+      }, 1200);
+    }, 50);
   };
 
   const toggleHaptics = () => {
-    setHapticsEnabled(prev => !prev);
+    setHapticsEnabled(prev => {
+      const next = !prev;
+      showToast(`Haptic feedback ${next ? 'enabled' : 'disabled'}`, 'info');
+      return next;
+    });
   };
 
   const toggleReducedMotion = () => {
-    setReducedMotion(prev => !prev);
+    setReducedMotion(prev => {
+      const next = !prev;
+      showToast(`Reduced motion ${next ? 'enabled' : 'disabled'}`, 'info');
+      return next;
+    });
   };
 
   const containerVariants = {
@@ -185,83 +212,85 @@ export default function App() {
   };
 
   return (
-    <LanguageProvider>
+    <>
       <SectionTracker />
-      <ToastProvider>
-        <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>
-          <SmoothScroll>
-            <div className="relative selection:bg-brand-accent selection:text-white">
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
-            />
-            <SectionSEO />
-            <AmbientGlow active={cyberAmbient} />
-            <LiveBackground theme={theme} reducedMotion={reducedMotion} />
-            <ReadingProgressBar />
-            <CursorTrail theme={theme} reducedMotion={reducedMotion} />
-            <AutonomousAgent />
-            <HapticInterface enabled={hapticsEnabled} />
-            <GlitchOverlay />
-            <Navbar 
-              theme={theme} 
-              toggleTheme={toggleTheme} 
-              cyberAmbient={cyberAmbient}
-              toggleCyberAmbient={toggleCyberAmbient}
-              hapticsEnabled={hapticsEnabled}
-              toggleHaptics={toggleHaptics}
-              reducedMotion={reducedMotion}
-              toggleReducedMotion={toggleReducedMotion}
-            />
-            <AIChatbot theme={theme} />
-            <OfflineIndicator />
-            
-            <motion.main
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={sectionVariants}><Hero theme={theme} reducedMotion={reducedMotion} /></motion.div>
-              <motion.div variants={sectionVariants}><Marquee /></motion.div>
-              <motion.div variants={sectionVariants}><ClientCarousel theme={theme} /></motion.div>
-              <motion.div variants={sectionVariants}><About /></motion.div>
-              <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-              <motion.div variants={sectionVariants}><Services /></motion.div>
-              <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-              <motion.div variants={sectionVariants}><Portfolio /></motion.div>
-              <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-              <motion.div variants={sectionVariants}><MotionShowcase /></motion.div>
-              <motion.div variants={sectionVariants}><TechStack /></motion.div>
-              <motion.div variants={sectionVariants}><Process /></motion.div>
-              <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-              <motion.div variants={sectionVariants}><WhyNexenity /></motion.div>
-              <motion.div variants={sectionVariants}><FAQ /></motion.div>
-              <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-              <motion.div variants={sectionVariants}><Contact /></motion.div>
-              <motion.div variants={sectionVariants}><Footer /></motion.div>
-            </motion.main>
+      <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>
+        <SmoothScroll>
+          <div className="relative selection:bg-brand-accent selection:text-white">
+          <SparklingBackground density={40} speed={0.4} size={1.5} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
+          />
+          <SectionSEO />
+          <ThemeReveal 
+            active={reveal.active} 
+            theme={reveal.theme} 
+            x={reveal.x} 
+            y={reveal.y} 
+            onComplete={() => {}} 
+          />
+          <ReadingProgressBar />
+          <HapticInterface enabled={hapticsEnabled} />
+          <Navbar 
+            theme={theme} 
+            toggleTheme={toggleTheme} 
+            hapticsEnabled={hapticsEnabled}
+            toggleHaptics={toggleHaptics}
+            reducedMotion={reducedMotion}
+            toggleReducedMotion={toggleReducedMotion}
+          />
+          <ScrollToTop theme={theme} />
+          <InteractionTrail />
+          <AIChatbot theme={theme} />
+          <OfflineIndicator />
+          
+          <motion.main
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={sectionVariants}><Hero theme={theme} reducedMotion={reducedMotion} /></motion.div>
+            <motion.div variants={sectionVariants}><Marquee /></motion.div>
+            <motion.div variants={sectionVariants}><ClientCarousel theme={theme} /></motion.div>
+            <motion.div variants={sectionVariants}><About /></motion.div>
+            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
+            <motion.div variants={sectionVariants}><Services /></motion.div>
+            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
+            <motion.div variants={sectionVariants}><Portfolio /></motion.div>
+            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
+            <motion.div variants={sectionVariants}><MotionShowcase /></motion.div>
+            <motion.div variants={sectionVariants}><TechStack /></motion.div>
+            <motion.div variants={sectionVariants}><Process /></motion.div>
+            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
+            <motion.div variants={sectionVariants}><WhyNexenity /></motion.div>
+            <motion.div variants={sectionVariants}><FAQ /></motion.div>
+            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
+            <motion.div variants={sectionVariants}><Contact /></motion.div>
+            <motion.div variants={sectionVariants}><Footer /></motion.div>
+          </motion.main>
 
-            {/* Global SVG Definitions */}
-            <svg id="global-svg-defs" style={{ visibility: 'hidden', position: 'absolute', width: 0, height: 0 }}>
-              <defs>
-                <filter id="gooey">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                  <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
-                  <feBlend in="SourceGraphic" in2="goo" />
-                </filter>
-                
-                <linearGradient id="gradient-divider" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#00f3ff" />
-                  <stop offset="50%" stopColor="#ff2d95" />
-                  <stop offset="100%" stopColor="#00f3ff" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-        </SmoothScroll>
-      </MotionConfig>
-      </ToastProvider>
-    </LanguageProvider>
+          {/* Global SVG Definitions */}
+          <svg id="global-svg-defs" style={{ visibility: 'hidden', position: 'absolute', width: 0, height: 0 }}>
+            <defs>
+              <filter id="gooey">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                <feBlend in="SourceGraphic" in2="goo" />
+              </filter>
+              
+              <linearGradient id="gradient-divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#00f3ff" />
+                <stop offset="50%" stopColor="#ff2d95" />
+                <stop offset="100%" stopColor="#00f3ff" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </SmoothScroll>
+    </MotionConfig>
+    </>
   );
 }
+
 

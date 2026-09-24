@@ -10,7 +10,7 @@ export function MotionShowcase() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-black overflow-hidden">
+    <section id="motion" className="py-24 md:py-32 bg-black overflow-hidden">
       <div className="px-6 md:px-12 mb-16">
         <motion.span
           initial={{ opacity: 0 }}

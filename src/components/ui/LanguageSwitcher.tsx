@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Languages, Check } from 'lucide-react';
 import { useLanguage, Language } from '../../contexts/LanguageContext';
+import { useToast } from './Toast';
+import { Magnetic } from './Magnetic';
 import { cn } from '../../lib/utils';
 
 const LANGUAGES: { code: Language; label: string; flag: string }[] = [
@@ -18,26 +20,29 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ theme }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage();
+  const { showToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
 
   return (
     <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center gap-2 p-2 rounded-full border transition-all duration-300",
-          theme === 'dark' 
-            ? "border-white/10 hover:border-white/30 text-white/70" 
-            : "border-black/10 hover:border-black/30 text-black/70",
-          isOpen && (theme === 'dark' ? "bg-white/10" : "bg-black/5")
-        )}
-        title="Switch Language"
-      >
-        <Languages size={18} />
-        <span className="text-xs font-bold uppercase tracking-widest hidden lg:inline">{currentLang.code}</span>
-      </button>
+      <Magnetic strength={0.3}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={cn(
+            "flex items-center gap-2 p-2 rounded-full border transition-all duration-300",
+            theme === 'dark' 
+              ? "border-white/10 hover:border-white/30 text-white/70" 
+              : "border-black/10 hover:border-black/30 text-black/70",
+            isOpen && (theme === 'dark' ? "bg-white/10" : "bg-black/5")
+          )}
+          title="Switch Language"
+        >
+          <Languages size={18} />
+          <span className="text-xs font-bold uppercase tracking-widest hidden lg:inline">{currentLang.code}</span>
+        </button>
+      </Magnetic>
 
       <AnimatePresence>
         {isOpen && (
@@ -62,6 +67,7 @@ export function LanguageSwitcher({ theme }: LanguageSwitcherProps) {
                     onClick={() => {
                       setLanguage(lang.code);
                       setIsOpen(false);
+                      showToast(`Language set to ${lang.label}`, 'success');
                     }}
                     className={cn(
                       "w-full flex items-center justify-between px-4 py-2 rounded-xl text-sm transition-all",

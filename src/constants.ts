@@ -1,4 +1,42 @@
-import { Service, Project, Value, TechItem, ProcessStep } from './types';
+import { Service, Project, Value, TechItem, ProcessStep, RoadmapStep } from './types';
+
+export const ROADMAP: RoadmapStep[] = [
+  {
+    date: 'Q1 2024',
+    title: 'Foundation & AI Research',
+    description: 'Establishing core AI infrastructure and researching generative models for creative workflows.',
+    status: 'completed',
+    milestones: ['Core Platform Launch', 'GenAI Research Phase', 'Beta Automation Tools']
+  },
+  {
+    date: 'Q2 2024',
+    title: 'Automation Engine Beta',
+    description: 'Launching the first version of our AI-driven workflow automation engine for creative agencies.',
+    status: 'completed',
+    milestones: ['Workflow Designer', 'API Integration Suite', 'Performance Analytics']
+  },
+  {
+    date: 'Q3 2024',
+    title: 'Immersive Experiences',
+    description: 'Focusing on 3D web experiences and advanced motion graphics integration.',
+    status: 'completed',
+    milestones: ['Three.js Lab', 'Motion Graphics Engine', 'Interactive Brand Kits']
+  },
+  {
+    date: 'Q4 2024',
+    title: 'Nexenity Agents',
+    description: 'Deploying specialized autonomous AI agents for customer support and lead generation.',
+    status: 'in-progress',
+    milestones: ['Agent Orchestrator', 'Omni-channel Support', 'Natural Language Understanding']
+  },
+  {
+    date: 'Q1 2025',
+    title: 'Scaling & Intelligence',
+    description: 'Advanced predictive analytics and cross-platform growth systems.',
+    status: 'upcoming',
+    milestones: ['Predictive Growth Engine', 'Self-Healing Systems', 'Global Reach Expansion']
+  }
+];
 
 export const SERVICES: Service[] = [
   {
@@ -6,6 +44,7 @@ export const SERVICES: Service[] = [
     number: '01',
     title: 'Full-Stack Development',
     description: 'Modern, scalable web applications using modern frontend and backend technologies.',
+    tooltip: 'Build robust scalable architectures',
     details: {
       process: ['Architecture Design', 'Frontend Implementation', 'Backend Integration', 'QA & Deployment'],
       deliverables: ['Responsive Web App', 'API Documentation', 'Source Code', 'Deployment Pipeline'],
@@ -18,6 +57,7 @@ export const SERVICES: Service[] = [
     number: '02',
     title: 'AI & GenAI',
     description: 'AI-powered applications, assistants, intelligent search, and custom AI experiences.',
+    tooltip: 'Leverage the power of Gemini',
     details: {
       process: ['Model Selection', 'Prompt Engineering', 'RAG Integration', 'User Interface Design'],
       deliverables: ['Custom AI Assistant', 'Integrated Search Engine', 'LLM Wrappers', 'AI Training Workflows'],
@@ -30,6 +70,7 @@ export const SERVICES: Service[] = [
     number: '03',
     title: 'AI Automation',
     description: 'Automate repetitive business workflows using AI agents, APIs, and workflow automation.',
+    tooltip: 'Scale with intelligent workflows',
     details: {
       process: ['Workflow Audit', 'Agent Configuration', 'Tool Integration', 'Monitoring Setup'],
       deliverables: ['Automated Pipelines', 'AI Agents', 'Integration Hub', 'Performance Reports'],
@@ -42,6 +83,7 @@ export const SERVICES: Service[] = [
     number: '04',
     title: 'AI Chatbots & Agents',
     description: 'Intelligent conversational systems for customer support, lead generation, and sales.',
+    tooltip: 'Automate customer interactions',
     details: {
       process: ['Conversation Design', 'Context Engineering', 'Integration', 'Feedback Loop'],
       deliverables: ['Custom Chatbot', 'Lead Capture Engine', 'Human-in-loop System', 'Analytics Dashboard'],
@@ -54,6 +96,7 @@ export const SERVICES: Service[] = [
     number: '05',
     title: 'SaaS Development',
     description: 'From MVP to production-ready SaaS platforms with advanced feature sets.',
+    tooltip: 'Launch your product faster',
     details: {
       process: ['MVP Scoping', 'Product Engineering', 'Subscription Logic', 'Scaling'],
       deliverables: ['SaaS Platform', 'Admin Dashboard', 'Billing Integration', 'Analytics'],
@@ -66,6 +109,7 @@ export const SERVICES: Service[] = [
     number: '06',
     title: 'UI/UX Design',
     description: 'Modern, intuitive interfaces and digital product experiences built for humans.',
+    tooltip: 'Human-centric digital design',
     details: {
       process: ['User Research', 'Wireframing', 'Prototyping', 'Design Systems'],
       deliverables: ['High-Fidelity UI', 'Interactive Prototype', 'Design Guidelines', 'Asset Library'],
@@ -78,6 +122,7 @@ export const SERVICES: Service[] = [
     number: '07',
     title: 'Graphic & Brand Design',
     description: 'Visual identities, social media graphics, and cohesive brand systems.',
+    tooltip: 'Identity that resonates',
     details: {
       process: ['Brand Discovery', 'Visual Exploration', 'System Design', 'Asset Production'],
       deliverables: ['Brand Guidelines', 'Logo System', 'Social Assets', 'Marketing Collateral'],
@@ -90,6 +135,7 @@ export const SERVICES: Service[] = [
     number: '08',
     title: 'Motion Graphics',
     description: 'Animated visuals, promotional videos, and creative campaigns that move.',
+    tooltip: 'Stories in motion',
     details: {
       process: ['Storyboarding', 'Visual Design', 'Animation', 'Sound Design'],
       deliverables: ['Promotional Video', 'UI Animations', 'Logo Stings', 'Social Reels'],
@@ -102,6 +148,7 @@ export const SERVICES: Service[] = [
     number: '09',
     title: 'Video Creation',
     description: 'Short-form content, promotional videos, and AI-assisted video production.',
+    tooltip: 'Cinematic brand impact',
     details: {
       process: ['Scripting', 'Capture/Generation', 'Editing', 'Post-Production'],
       deliverables: ['Finished Video', 'Social Media Cuts', 'AI-Generated B-Roll', 'Color Grade'],
@@ -114,6 +161,7 @@ export const SERVICES: Service[] = [
     number: '10',
     title: 'Digital Marketing',
     description: 'Content strategy, SEO, analytics, and growth systems that scale businesses.',
+    tooltip: 'Data-driven growth',
     details: {
       process: ['Audit & Strategy', 'Execution', 'Optimization', 'Growth Loop'],
       deliverables: ['Growth Strategy', 'SEO Reports', 'Ad Campaign Setup', 'Analytics Setup'],
@@ -126,6 +174,7 @@ export const SERVICES: Service[] = [
     number: '11',
     title: 'Social Media',
     description: 'Content planning, creative production, and audience growth strategies.',
+    tooltip: 'Build viral communities',
     details: {
       process: ['Platform Audit', 'Content Pillars', 'Production', 'Engagement'],
       deliverables: ['Content Calendar', 'Viral Assets', 'Platform Strategy', 'Growth Plan'],
@@ -138,6 +187,7 @@ export const SERVICES: Service[] = [
     number: '12',
     title: 'Creative Technology',
     description: 'Experimental interactive websites and immersive digital experiences.',
+    tooltip: 'Beyond standard digital',
     details: {
       process: ['Creative Concept', 'Prototyping', 'Development', 'Interaction Polish'],
       deliverables: ['Interactive Website', 'Immersive App', 'Experimental UI', 'Custom Shaders'],

@@ -32,8 +32,8 @@ export function SectionDivider() {
       
       {/* Centered geometric accent */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4">
-        <div className="absolute inset-0 border border-brand-accent rotate-45 animate-pulse" />
-        <div className="absolute inset-0 border border-cyan-400 -rotate-45 animate-pulse delay-75" />
+        <div className="absolute inset-0 border border-brand-accent rotate-45" />
+        <div className="absolute inset-0 border border-cyan-400 -rotate-45" />
       </div>
     </div>
   );
