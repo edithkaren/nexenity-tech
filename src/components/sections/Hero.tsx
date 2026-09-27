@@ -1,9 +1,9 @@
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { useRef } from 'react';
 import { ArrowRight, ArrowDown } from 'lucide-react';
-import { Globe3D } from '../ui/Globe3D';
 import { Magnetic } from '../ui/Magnetic';
 import { VisitorGreeting } from '../ui/VisitorGreeting';
+import { ParallaxElement } from '../ui/ParallaxElement';
 import { cn } from '../../lib/utils';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -18,26 +18,17 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
   const title = t('hero.title');
   const words = title.split(" ");
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  const sphereY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const sphereScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
-  const sphereOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
   const titleVariants: any = {
     hidden: { 
       opacity: 0, 
       x: reducedMotion ? 0 : -15,
-      skewX: reducedMotion ? 0 : -10,
+      scale: 0.9,
       filter: 'blur(10px)'
     },
     visible: (i: number) => ({
       opacity: 1,
       x: [0, -5, 2, 0],
-      skewX: 0,
+      scale: 1,
       filter: 'blur(0px)',
       transition: {
         delay: 0.4 + i * 0.08,
@@ -53,10 +44,11 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
   };
 
   const subtitleVariants: any = {
-    hidden: { opacity: 0, y: 10 },
+    hidden: { opacity: 0, y: 10, scale: 0.98 },
     visible: { 
       opacity: 1, 
       y: 0,
+      scale: 1,
       transition: { 
         delay: 0.4 + words.length * 0.08 + 0.2,
         duration: 0.8,
@@ -71,20 +63,35 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
       ref={containerRef}
       className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-20 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-        <div className="z-10">
-          <VisitorGreeting />
+      {/* Parallax Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={120} className="absolute top-[15%] left-[5%] w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl" children={null} />
+        <ParallaxElement offset={80} reverse className="absolute bottom-[20%] right-[10%] w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" children={null} />
+        <ParallaxElement offset={150} className="absolute top-[40%] right-[5%] w-32 h-32 border border-white/5 rounded-full" children={null} />
+        <ParallaxElement offset={100} reverse className="absolute bottom-[10%] left-[15%] w-48 h-48 border border-brand-accent/10 rounded-full" children={null} />
+      </div>
+
+      <div className="max-w-4xl mx-auto w-full relative z-10 text-center flex flex-col items-center">
+        <div className="z-10 w-full">
+          <div className="flex justify-center mb-4">
+            <VisitorGreeting />
+          </div>
           
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex items-center gap-3 mb-6"
+            className="flex items-center justify-center gap-4 mb-8"
           >
-            <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-brand-accent uppercase">
-              Nexenity Technologies • Digital Innovation Studio
+            <div className="flex items-center gap-2 px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full">
+              <div className="w-1.5 h-1.5 bg-brand-accent rounded-full animate-pulse" />
+              <span className="text-[10px] font-bold tracking-[0.1em] text-brand-accent uppercase">
+                {t('hero.badge')}
+              </span>
+            </div>
+            <span className="text-[10px] font-bold tracking-[0.2em] text-white/40 uppercase">
+              Digital Innovation Studio
             </span>
-            <div className="h-[1px] w-12 bg-brand-accent/50" />
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8">
@@ -106,21 +113,23 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
             ))}
           </h1>
 
-          <motion.p
-            key={t('hero.subtitle')}
-            variants={subtitleVariants}
-            initial="hidden"
-            animate="visible"
-            className="text-lg md:text-xl text-text-muted max-w-xl leading-relaxed mb-10"
-          >
-            {t('hero.subtitle')}
-          </motion.p>
+          <div className="flex justify-center">
+            <motion.p
+              key={t('hero.subtitle')}
+              variants={subtitleVariants}
+              initial="hidden"
+              animate="visible"
+              className="text-lg md:text-xl text-text-muted max-w-2xl leading-relaxed mb-10"
+            >
+              {t('hero.subtitle')}
+            </motion.p>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 + words.length * 0.08 + 0.4 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Magnetic>
               <button className={cn(
@@ -137,48 +146,6 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
             </Magnetic>
           </motion.div>
         </div>
-
-        <motion.div
-          style={{ y: sphereY, scale: sphereScale, opacity: sphereOpacity }}
-          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="relative aspect-square lg:aspect-auto h-[400px] lg:h-[600px] flex items-center justify-center"
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-             <Globe3D theme={theme} />
-          </div>
-          
-          {/* Animated labels around sphere */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[
-              { text: "AI", pos: "top-1/4 left-10" },
-              { text: "CODE", pos: "top-1/3 right-10" },
-              { text: "DESIGN", pos: "bottom-1/3 left-10" },
-              { text: "FUTURE", pos: "bottom-1/4 right-10" },
-              { text: "AUTOMATION", pos: "bottom-10 left-1/2 -translate-x-1/2" }
-            ].map((label, i) => (
-              <motion.div
-                key={i}
-                animate={{ 
-                  y: [0, -10, 0],
-                  opacity: [0.3, 0.6, 0.3]
-                }}
-                transition={{ 
-                  duration: 3 + i, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className={cn(
-                  "absolute text-[10px] font-bold tracking-widest text-text-muted uppercase",
-                  label.pos
-                )}
-              >
-                {label.text}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );

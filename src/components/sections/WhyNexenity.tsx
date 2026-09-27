@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Zap, Target, Users, Cpu, ShieldCheck, TrendingUp, FlaskConical } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { ParallaxElement } from '../ui/ParallaxElement';
 
 export function WhyNexenity() {
   const nodes = [
@@ -14,13 +15,19 @@ export function WhyNexenity() {
   ];
 
   return (
-    <section id="why-nexenity" className="py-24 md:py-48 px-6 md:px-12 bg-transparent overflow-hidden">
+    <section id="why-nexenity" className="py-24 md:py-48 px-6 md:px-12 bg-transparent overflow-hidden relative">
+      {/* Parallax Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={150} className="absolute top-[20%] right-[5%] w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px]" children={null} />
+        <ParallaxElement offset={100} reverse className="absolute bottom-[10%] left-[10%] w-72 h-72 border border-white/5 rounded-full" children={null} />
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-7xl mx-auto"
+        className="max-w-7xl mx-auto relative z-10"
       >
         <div className="text-center mb-24">
           <motion.h2

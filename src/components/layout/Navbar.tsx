@@ -65,8 +65,12 @@ export function Navbar({
             animate={{ opacity: 1, x: 0 }}
             className="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2"
           >
-            <div className={cn("w-8 h-8 rounded-full", theme === 'dark' ? "bg-white" : "bg-black")} />
-            NEXENITY
+            <img 
+              src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
+              alt="Nexenity Logo" 
+              className="w-8 h-8 rounded-full object-cover"
+            />
+            <span className="brand-logo-text">NEXENITY</span>
           </motion.div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -210,7 +214,14 @@ export function Navbar({
             className={cn("fixed inset-0 z-[100] flex flex-col", theme === 'dark' ? "bg-black" : "bg-white")}
           >
             <div className="p-6 md:p-12 flex justify-between items-center">
-              <span className="text-xl font-bold tracking-tighter">NEXENITY</span>
+              <div className="flex items-center gap-2">
+                <img 
+                  src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
+                  alt="Nexenity Logo" 
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <span className="text-xl font-bold tracking-tighter brand-logo-text">NEXENITY</span>
+              </div>
               <button onClick={() => setIsOpen(false)} className="text-text-base p-2">
                 <X size={32} />
               </button>

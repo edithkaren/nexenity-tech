@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { TechDetailModal } from '../ui/TechDetailModal';
+import { ParallaxElement } from '../ui/ParallaxElement';
 
 interface Project {
   title: string;
@@ -125,13 +126,19 @@ export function TechStack() {
   ];
 
   return (
-    <section id="techstack" className="py-24 px-6 md:px-12 bg-transparent overflow-hidden">
+    <section id="techstack" className="py-24 px-6 md:px-12 bg-transparent overflow-hidden min-h-screen flex flex-col justify-center relative">
+      {/* Parallax Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={160} className="absolute top-[30%] left-[5%] w-64 h-64 border border-brand-accent/10 rounded-full" children={null} />
+        <ParallaxElement offset={200} reverse className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] bg-brand-accent/5 rounded-full blur-[140px]" children={null} />
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-7xl mx-auto text-center"
+        className="max-w-7xl mx-auto text-center relative z-10"
       >
         <motion.span
           initial={{ opacity: 0 }}

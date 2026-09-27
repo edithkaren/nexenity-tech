@@ -19,10 +19,6 @@ import { SmoothScroll } from './components/ui/SmoothScroll';
 import { HapticInterface } from './components/ui/HapticInterface';
 import { useActiveSection } from './hooks/useActiveSection';
 
-function SectionTracker() {
-  useActiveSection();
-  return null;
-}
 import { ReadingProgressBar } from './components/ui/ReadingProgressBar';
 import { SectionSEO } from './components/ui/SectionSEO';
 import { AIChatbot } from './components/ui/AIChatbot';
@@ -30,7 +26,6 @@ import { OfflineIndicator } from './components/ui/OfflineIndicator';
 import { SectionDivider } from './components/ui/SectionDivider';
 import { ThemeReveal } from './components/ui/ThemeReveal';
 import { ScrollToTop } from './components/ui/ScrollToTop';
-import { InteractionTrail } from './components/ui/InteractionTrail';
 import { SparklingBackground } from './components/ui/SparklingBackground';
 import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/sections/Hero';
@@ -42,10 +37,13 @@ import { Portfolio } from './components/sections/Portfolio';
 import { MotionShowcase } from './components/sections/MotionShowcase';
 import { TechStack } from './components/sections/TechStack';
 import { Process } from './components/sections/Process';
+import { ImpactSection } from './components/sections/ImpactSection';
 import { WhyNexenity } from './components/sections/WhyNexenity';
 import { FAQ } from './components/sections/FAQ';
 import { Contact } from './components/sections/Contact';
+import SplashCursor from './components/ui/SplashCursor';
 import { Footer } from './components/layout/Footer';
+import { Reveal } from './components/ui/Reveal';
 
 // Loading Placeholder
 const SectionLoader = () => (
@@ -54,7 +52,11 @@ const SectionLoader = () => (
   </div>
 );
 
+import { SideNav } from './components/layout/SideNav';
+import { SectionAudio } from './components/ui/SectionAudio';
+
 export default function App() {
+  const activeSection = useActiveSection();
   const { showToast } = useToast();
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
@@ -213,7 +215,6 @@ export default function App() {
 
   return (
     <>
-      <SectionTracker />
       <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>
         <SmoothScroll>
           <div className="relative selection:bg-brand-accent selection:text-white">
@@ -232,6 +233,8 @@ export default function App() {
           />
           <ReadingProgressBar />
           <HapticInterface enabled={hapticsEnabled} />
+          <SideNav activeSection={activeSection} theme={theme} />
+          <SectionAudio activeSection={activeSection} />
           <Navbar 
             theme={theme} 
             toggleTheme={toggleTheme} 
@@ -241,33 +244,34 @@ export default function App() {
             toggleReducedMotion={toggleReducedMotion}
           />
           <ScrollToTop theme={theme} />
-          <InteractionTrail />
           <AIChatbot theme={theme} />
           <OfflineIndicator />
           
+          <SplashCursor RAINBOW_MODE />
           <motion.main
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            <motion.div variants={sectionVariants}><Hero theme={theme} reducedMotion={reducedMotion} /></motion.div>
-            <motion.div variants={sectionVariants}><Marquee /></motion.div>
-            <motion.div variants={sectionVariants}><ClientCarousel theme={theme} /></motion.div>
-            <motion.div variants={sectionVariants}><About /></motion.div>
-            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-            <motion.div variants={sectionVariants}><Services /></motion.div>
-            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-            <motion.div variants={sectionVariants}><Portfolio /></motion.div>
-            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-            <motion.div variants={sectionVariants}><MotionShowcase /></motion.div>
-            <motion.div variants={sectionVariants}><TechStack /></motion.div>
-            <motion.div variants={sectionVariants}><Process /></motion.div>
-            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-            <motion.div variants={sectionVariants}><WhyNexenity /></motion.div>
-            <motion.div variants={sectionVariants}><FAQ /></motion.div>
-            <motion.div variants={sectionVariants}><SectionDivider /></motion.div>
-            <motion.div variants={sectionVariants}><Contact /></motion.div>
-            <motion.div variants={sectionVariants}><Footer /></motion.div>
+            <Hero theme={theme} reducedMotion={reducedMotion} />
+            <Reveal delay={0.1}><Marquee /></Reveal>
+            <ClientCarousel theme={theme} />
+            <About />
+            <SectionDivider />
+            <Services />
+            <SectionDivider />
+            <Portfolio />
+            <SectionDivider />
+            <MotionShowcase />
+            <TechStack />
+            <ImpactSection />
+            <Process />
+            <SectionDivider />
+            <WhyNexenity />
+            <FAQ />
+            <SectionDivider />
+            <Contact />
+            <Footer />
           </motion.main>
 
           {/* Global SVG Definitions */}

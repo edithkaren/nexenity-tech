@@ -48,9 +48,13 @@ export function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
         {/* Brand Column */}
         <div className="md:col-span-4">
-          <div className="flex items-center gap-2 mb-8 group cursor-default">
-            <div className="w-10 h-10 bg-brand-accent rounded-sm flex items-center justify-center text-black font-black text-xl italic group-hover:rotate-12 transition-transform">N</div>
-            <span className="text-2xl font-black tracking-tighter uppercase tracking-widest">Nexenity</span>
+          <div className="flex items-center gap-3 mb-8 group cursor-default">
+            <img 
+              src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
+              alt="Nexenity Logo" 
+              className="w-10 h-10 rounded-full object-cover group-hover:rotate-12 transition-transform"
+            />
+            <span className="text-2xl font-black tracking-tighter uppercase tracking-widest brand-logo-text">Nexenity</span>
           </div>
           <p className="text-white/40 text-sm leading-relaxed max-w-xs mb-8">
             Pioneering the intersection of artificial intelligence, high-end motion design, and futuristic brand identities.
@@ -99,8 +103,8 @@ export function Footer() {
             {MOCK_UPDATES.map((update, i) => (
               <motion.div 
                 key={update.id}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, x: 20, scale: 0.98 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ delay: i * 0.1 }}
                 className="p-4 bg-white/[0.02] border border-white/5 rounded-xl hover:border-white/10 transition-all group"
               >

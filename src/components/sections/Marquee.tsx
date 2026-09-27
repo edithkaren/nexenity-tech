@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { ParallaxElement } from '../ui/ParallaxElement';
 
 export function Marquee() {
   const items = [
@@ -13,8 +14,13 @@ export function Marquee() {
   ];
 
   return (
-    <div className="py-12 bg-transparent border-y border-border-base overflow-hidden">
-      <div className="flex whitespace-nowrap">
+    <div className="py-12 bg-transparent border-y border-border-base overflow-hidden relative">
+      {/* Very subtle background parallax */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={30} className="absolute top-1/2 left-[20%] w-32 h-32 bg-brand-accent/2 rounded-full blur-2xl" children={null} />
+      </div>
+
+      <div className="flex whitespace-nowrap relative z-10">
         <motion.div
           initial={{ x: 0 }}
           animate={{ x: '-50%' }}

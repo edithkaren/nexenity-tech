@@ -29,24 +29,18 @@
 }
 
 @layer base {
-  html.lenis {
-    height: auto;
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
   }
 
-  .lenis.lenis-smooth {
-    scroll-behavior: auto;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-  .lenis.lenis-scrolling iframe {
-    pointer-events: none;
+  section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
   }
 
   body {
@@ -90,6 +84,14 @@
 
   .text-reveal {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .brand-logo-text {
+    background: linear-gradient(to right, #00f3ff, #ff2d95);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
   }
 
   .mask-radial {

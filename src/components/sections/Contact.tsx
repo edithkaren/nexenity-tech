@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Send, CheckCircle2, ArrowRight } from 'lucide-react';
 import { useToast } from '../ui/Toast';
 import { ServiceDashboard } from '../ui/ServiceDashboard';
+import { ParallaxElement } from '../ui/ParallaxElement';
+import { Reveal } from '../ui/Reveal';
 
 export function Contact() {
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -18,57 +20,53 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 px-6 md:px-12 bg-transparent relative">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-7xl mx-auto"
-      >
+    <section id="contact" className="py-24 md:py-32 px-6 md:px-12 bg-transparent relative overflow-hidden">
+      {/* Parallax Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={150} className="absolute -bottom-[10%] right-[10%] w-[600px] h-[600px] bg-brand-accent/5 rounded-full blur-[120px]" children={null} />
+        <ParallaxElement offset={80} reverse className="absolute top-[10%] left-[5%] w-48 h-48 border border-white/5 rounded-full" children={null} />
+      </div>
+
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           <div>
-            <motion.span
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-xs font-bold tracking-widest text-brand-accent uppercase block mb-6"
-            >
-              Get in Touch
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8"
-            >
-              HAVE AN IDEA?<br />
-              <span className="liquid-text">LET'S BUILD IT.</span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-white/60 text-lg md:text-xl leading-relaxed max-w-lg mb-12"
-            >
-              Tell us what you're building, what you're trying to solve, or where you want to go next. 
-              Let's turn the idea into something real.
-            </motion.p>
+            <Reveal>
+              <span className="text-xs font-bold tracking-widest text-brand-accent uppercase block mb-6">
+                Get in Touch
+              </span>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] mb-8">
+                HAVE AN IDEA?<br />
+                <span className="liquid-text">LET'S BUILD IT.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-lg mb-12">
+                Tell us what you're building, what you're trying to solve, or where you want to go next. 
+                Let's turn the idea into something real.
+              </p>
+            </Reveal>
 
-            <div className="space-y-6">
-              <div className="flex items-center gap-4 text-white/40">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
-                  <ArrowRight className="-rotate-45" size={20} />
+            <Reveal delay={0.3}>
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 text-white/40">
+                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
+                    <ArrowRight className="-rotate-45" size={20} />
+                  </div>
+                  <span className="text-lg">hello@nexenity.tech</span>
                 </div>
-                <span className="text-lg">hello@nexenity.tech</span>
               </div>
-            </div>
+            </Reveal>
 
-            <ServiceDashboard />
+            <Reveal delay={0.4}>
+              <ServiceDashboard />
+            </Reveal>
           </div>
 
-          <div className="bg-zinc-900 border border-white/10 p-8 md:p-12 rounded-3xl relative overflow-hidden">
-            <AnimatePresence mode="wait">
+          <Reveal delay={0.2} threshold={0.1}>
+            <div className="bg-zinc-900 border border-white/10 p-8 md:p-12 rounded-3xl relative overflow-hidden">
+              <AnimatePresence mode="wait">
               {formState === 'success' ? (
                 <motion.div
                   key="success"
@@ -178,8 +176,9 @@ export function Contact() {
               )}
             </AnimatePresence>
           </div>
-        </div>
-      </motion.div>
-    </section>
+        </Reveal>
+      </div>
+    </div>
+  </section>
   );
 }

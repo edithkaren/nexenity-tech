@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export function useActiveSection() {
   const { t } = useLanguage();
+  const [activeSection, setActiveSection] = useState('hero');
   const baseTitle = "Nexenity Technologies";
 
   useEffect(() => {
@@ -18,6 +19,8 @@ export function useActiveSection() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
+          setActiveSection(id);
+          
           // Map ID to a readable name or translation key
           const sectionNames: Record<string, string> = {
             'hero': t('nav.home'),
@@ -38,4 +41,6 @@ export function useActiveSection() {
 
     return () => observer.disconnect();
   }, [t]);
+
+  return activeSection;
 }

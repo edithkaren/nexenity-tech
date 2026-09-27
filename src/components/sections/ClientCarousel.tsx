@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { cn } from '../../lib/utils';
+import { ParallaxElement } from '../ui/ParallaxElement';
 import { 
   Cpu, 
   Globe, 
@@ -28,10 +29,16 @@ export function ClientCarousel({ theme }: { theme: 'dark' | 'light' }) {
 
   return (
     <section className="py-20 relative overflow-hidden bg-background-base/50 border-y border-border-base/50">
-      <div className="max-w-7xl mx-auto px-6 mb-12">
+      {/* Parallax Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <ParallaxElement offset={50} className="absolute top-[10%] left-[5%] w-32 h-32 border border-white/5 rounded-full" children={null} />
+        <ParallaxElement offset={50} reverse className="absolute bottom-[10%] right-[5%] w-48 h-48 border border-white/5 rounded-full" children={null} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 mb-12 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
           className="text-center"
         >
