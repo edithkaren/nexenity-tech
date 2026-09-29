@@ -71,6 +71,25 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
         <ParallaxElement offset={100} reverse className="absolute bottom-[10%] left-[15%] w-48 h-48 border border-brand-accent/10 rounded-full" children={null} />
       </div>
 
+      {/* Background Video */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover grayscale contrast-125 scale-110"
+        >
+          <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_170109_f96e01a5-b0db-4274-b24d-8d97e99ec928.mp4" type="video/mp4" />
+        </video>
+        <div className={cn(
+          "absolute inset-0",
+          theme === 'dark' 
+            ? "bg-gradient-to-b from-black via-transparent to-black" 
+            : "bg-gradient-to-b from-white via-transparent to-white"
+        )} />
+      </div>
+
       <div className="max-w-4xl mx-auto w-full relative z-10 text-center flex flex-col items-center">
         <div className="z-10 w-full">
           <div className="flex justify-center mb-4">
