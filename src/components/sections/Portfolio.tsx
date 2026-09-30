@@ -62,11 +62,12 @@ export function Portfolio() {
                 i === 3 ? "md:col-span-7" : "",
               )}
             >
-              <Reveal delay={i * 0.1} threshold={0.2}>
+              <Reveal delay={i * 0.1} threshold={0.1}>
                 <div className="relative aspect-[16/9] md:aspect-auto md:h-[500px] rounded-3xl overflow-hidden mb-8">
                   <img 
                     src={project.image} 
                     alt={project.name}
+                    loading="lazy"
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />

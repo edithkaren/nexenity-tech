@@ -1,7 +1,17 @@
 import { TechText } from '../ui/TechText';
 import { Reveal } from '../ui/Reveal';
+import { useState, useEffect } from 'react';
 
 export function ImpactSection() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section className="py-32 md:py-48 px-6 md:px-12 bg-black relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh]">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-accent/5 to-transparent pointer-events-none" />
@@ -16,7 +26,7 @@ export function ImpactSection() {
         <div className="h-[200px] md:h-[400px] w-full mb-12">
           <TechText 
             text="BUILDING"
-            fontSize={window.innerWidth < 768 ? 80 : 180}
+            fontSize={isMobile ? 80 : 180}
             reach={120}
             speed={2}
           />
@@ -25,7 +35,7 @@ export function ImpactSection() {
         <div className="h-[200px] md:h-[400px] w-full -mt-24 md:-mt-48">
           <TechText 
             text="TOMORROW"
-            fontSize={window.innerWidth < 768 ? 60 : 160}
+            fontSize={isMobile ? 60 : 160}
             reach={150}
             speed={1.5}
             color="#ff2d95"

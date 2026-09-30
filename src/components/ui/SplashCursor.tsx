@@ -60,7 +60,7 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       this.color = [0, 0, 0];
     }
 
-    let config = {
+    const config = {
       SIM_RESOLUTION,
       DYE_RESOLUTION,
       CAPTURE_RESOLUTION,

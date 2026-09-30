@@ -28,21 +28,23 @@ import { ThemeReveal } from './components/ui/ThemeReveal';
 import { ScrollToTop } from './components/ui/ScrollToTop';
 import { SparklingBackground } from './components/ui/SparklingBackground';
 import { Navbar } from './components/layout/Navbar';
-import { Hero } from './components/sections/Hero';
-import { Marquee } from './components/sections/Marquee';
-import { ClientCarousel } from './components/sections/ClientCarousel';
-import { About } from './components/sections/About';
-import { Services } from './components/sections/Services';
-import { Portfolio } from './components/sections/Portfolio';
-import { MotionShowcase } from './components/sections/MotionShowcase';
-import { TechStack } from './components/sections/TechStack';
-import { Process } from './components/sections/Process';
-import { ImpactSection } from './components/sections/ImpactSection';
-import { WhyNexenity } from './components/sections/WhyNexenity';
-import { FAQ } from './components/sections/FAQ';
-import { Contact } from './components/sections/Contact';
+// Sections
+const Hero = lazy(() => import('./components/sections/Hero').then(m => ({ default: m.Hero })));
+const Marquee = lazy(() => import('./components/sections/Marquee').then(m => ({ default: m.Marquee })));
+const ClientCarousel = lazy(() => import('./components/sections/ClientCarousel').then(m => ({ default: m.ClientCarousel })));
+const About = lazy(() => import('./components/sections/About').then(m => ({ default: m.About })));
+const Services = lazy(() => import('./components/sections/Services').then(m => ({ default: m.Services })));
+const Portfolio = lazy(() => import('./components/sections/Portfolio').then(m => ({ default: m.Portfolio })));
+const MotionShowcase = lazy(() => import('./components/sections/MotionShowcase').then(m => ({ default: m.MotionShowcase })));
+const TechStack = lazy(() => import('./components/sections/TechStack').then(m => ({ default: m.TechStack })));
+const Process = lazy(() => import('./components/sections/Process').then(m => ({ default: m.Process })));
+const ImpactSection = lazy(() => import('./components/sections/ImpactSection').then(m => ({ default: m.ImpactSection })));
+const WhyNexenity = lazy(() => import('./components/sections/WhyNexenity').then(m => ({ default: m.WhyNexenity })));
+const FAQ = lazy(() => import('./components/sections/FAQ').then(m => ({ default: m.FAQ })));
+const Contact = lazy(() => import('./components/sections/Contact').then(m => ({ default: m.Contact })));
+const Footer = lazy(() => import('./components/layout/Footer').then(m => ({ default: m.Footer })));
+
 import SplashCursor from './components/ui/SplashCursor';
-import { Footer } from './components/layout/Footer';
 import { Reveal } from './components/ui/Reveal';
 
 // Loading Placeholder
@@ -58,6 +60,16 @@ import { SectionAudio } from './components/ui/SectionAudio';
 export default function App() {
   const activeSection = useActiveSection();
   const { showToast } = useToast();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -218,7 +230,7 @@ export default function App() {
       <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>
         <SmoothScroll>
           <div className="relative selection:bg-brand-accent selection:text-white">
-          <SparklingBackground density={40} speed={0.4} size={1.5} />
+          <SparklingBackground density={isMobile ? 20 : 40} speed={isMobile ? 0.2 : 0.4} size={isMobile ? 1 : 1.5} />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
@@ -247,31 +259,41 @@ export default function App() {
           <AIChatbot theme={theme} />
           <OfflineIndicator />
           
-          <SplashCursor RAINBOW_MODE />
+          {!reducedMotion && (
+            <Suspense fallback={null}>
+              <SplashCursor 
+                RAINBOW_MODE 
+                SIM_RESOLUTION={isMobile ? 64 : 128} 
+                DYE_RESOLUTION={isMobile ? 512 : 1440} 
+              />
+            </Suspense>
+          )}
           <motion.main
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            <Hero theme={theme} reducedMotion={reducedMotion} />
-            <Reveal delay={0.1}><Marquee /></Reveal>
-            <ClientCarousel theme={theme} />
-            <About />
-            <SectionDivider />
-            <Services />
-            <SectionDivider />
-            <Portfolio />
-            <SectionDivider />
-            <MotionShowcase />
-            <TechStack />
-            <ImpactSection />
-            <Process />
-            <SectionDivider />
-            <WhyNexenity />
-            <FAQ />
-            <SectionDivider />
-            <Contact />
-            <Footer />
+            <Suspense fallback={<SectionLoader />}>
+              <Hero theme={theme} reducedMotion={reducedMotion} />
+              <Reveal delay={0.1}><Marquee /></Reveal>
+              <ClientCarousel theme={theme} />
+              <About />
+              <SectionDivider />
+              <Services />
+              <SectionDivider />
+              <Portfolio />
+              <SectionDivider />
+              <MotionShowcase />
+              <TechStack />
+              <ImpactSection />
+              <Process />
+              <SectionDivider />
+              <WhyNexenity />
+              <FAQ />
+              <SectionDivider />
+              <Contact />
+              <Footer />
+            </Suspense>
           </motion.main>
 
           {/* Global SVG Definitions */}

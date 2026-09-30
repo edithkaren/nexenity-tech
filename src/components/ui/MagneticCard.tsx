@@ -28,7 +28,7 @@ export function MagneticCard({
   const springY = useSpring(y, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || window.matchMedia('(pointer: coarse)').matches) return;
     
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;

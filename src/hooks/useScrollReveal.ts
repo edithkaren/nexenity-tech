@@ -1,4 +1,4 @@
-import { useInView, useAnimation, Variant } from 'motion/react';
+import { useInView, useAnimation, useReducedMotion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 
 interface ScrollRevealOptions {
@@ -19,12 +19,13 @@ export function useScrollReveal({
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: threshold, once });
   const controls = useAnimation();
+  const shouldReduceMotion = useReducedMotion();
 
   const variants = {
     hidden: { 
       opacity: 0, 
-      y: yOffset,
-      scale: 0.95,
+      y: shouldReduceMotion ? 0 : yOffset,
+      scale: shouldReduceMotion ? 1 : 0.95,
       transition: { duration }
     },
     visible: { 
@@ -32,7 +33,7 @@ export function useScrollReveal({
       y: 0,
       scale: 1,
       transition: { 
-        duration,
+        duration: shouldReduceMotion ? 0.4 : duration,
         delay,
         ease: [0.22, 1, 0.36, 1] as const // Quartic ease out
       }

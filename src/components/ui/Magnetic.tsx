@@ -23,7 +23,7 @@ export function Magnetic({ children, strength = 0.35, className }: MagneticProps
   const springY = useSpring(y, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (!ref.current || window.matchMedia('(pointer: coarse)').matches) return;
     const { clientX, clientY } = e;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     
