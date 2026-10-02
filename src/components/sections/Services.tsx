@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { X, ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
 import { MagneticCard } from '../ui/MagneticCard';
 import { SERVICES } from '../../constants';
@@ -139,13 +140,15 @@ export function Services() {
                   </div>
                 </div>
 
-                <button 
+                <Link 
+                  to="/#contact"
+                  onClick={() => setSelectedService(null)}
                   onMouseEnter={() => setHoveredService('cta')}
                   onMouseLeave={() => setHoveredService(null)}
                   className="bg-white text-black w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 group"
                 >
                   Start a Project <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
+                </Link>
               </div>
 
               <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-zinc-900">

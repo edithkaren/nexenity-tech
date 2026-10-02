@@ -831,8 +831,8 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
       let width = target == null ? gl!.drawingBufferWidth : target.width;
       let height = target == null ? gl!.drawingBufferHeight : target.height;
       displayMaterial.bind();
-      if (config.SHADING) gl!.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height);
-      gl!.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
+      if (config.SHADING) gl!.uniform2f(displayMaterial.uniforms['texelSize' as any], 1.0 / width, 1.0 / height);
+      gl!.uniform1i(displayMaterial.uniforms['uTexture' as any], dye.read.attach(0));
       blit(target);
     }
 

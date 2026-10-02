@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { Menu, X, ArrowRight, Instagram, Linkedin, Github, Twitter, Youtube, Sun, Moon, Zap, Volume2, VolumeX, Accessibility, ShieldCheck } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { PWAInstallButton } from '../ui/PWAInstallButton';
@@ -60,28 +61,39 @@ export function Navbar({
         )}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2"
-          >
-            <img 
-              src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
-              alt="Nexenity Logo" 
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <span className="brand-logo-text">NEXENITY</span>
-          </motion.div>
+          <Link to="/">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2"
+            >
+              <img 
+                src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
+                alt="Nexenity Logo" 
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <span className="brand-logo-text">NEXENITY</span>
+            </motion.div>
+          </Link>
 
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <Magnetic key={link.name} strength={0.2}>
-                <a
-                  href={link.href}
-                  className="text-sm font-medium hover:text-brand-accent transition-colors"
-                >
-                  {t(link.key)}
-                </a>
+                {link.href.startsWith('#') ? (
+                  <Link
+                    to={`/${link.href}`}
+                    className="text-sm font-medium hover:text-brand-accent transition-colors"
+                  >
+                    {t(link.key)}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="text-sm font-medium hover:text-brand-accent transition-colors"
+                  >
+                    {t(link.key)}
+                  </a>
+                )}
               </Magnetic>
             ))}
             
@@ -170,12 +182,15 @@ export function Navbar({
 
             <PWAInstallButton theme={theme} />
 
-            <button className={cn(
-              "px-6 py-2 rounded-full text-sm font-bold transition-all",
-              theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
-            )}>
+            <Link 
+              to="/#contact"
+              className={cn(
+                "px-6 py-2 rounded-full text-sm font-bold transition-all",
+                theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
+              )}
+            >
               {t('nav.cta')}
-            </button>
+            </Link>
           </div>
 
           <div className="flex items-center gap-4 md:hidden">
@@ -214,14 +229,16 @@ export function Navbar({
             className={cn("fixed inset-0 z-[100] flex flex-col", theme === 'dark' ? "bg-black" : "bg-white")}
           >
             <div className="p-6 md:p-12 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <img 
-                  src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
-                  alt="Nexenity Logo" 
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-                <span className="text-xl font-bold tracking-tighter brand-logo-text">NEXENITY</span>
-              </div>
+              <Link to="/" onClick={() => setIsOpen(false)}>
+                <div className="flex items-center gap-2">
+                  <img 
+                    src="/src/assets/images/nexenity_logo_futuristic_1790406574983.jpg" 
+                    alt="Nexenity Logo" 
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span className="text-xl font-bold tracking-tighter brand-logo-text">NEXENITY</span>
+                </div>
+              </Link>
               <button onClick={() => setIsOpen(false)} className="text-text-base p-2">
                 <X size={32} />
               </button>
@@ -236,13 +253,23 @@ export function Navbar({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 * i }}
                   >
-                    <a
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="text-5xl md:text-8xl font-bold tracking-tighter hover:text-brand-accent transition-colors"
-                    >
-                      {t(link.key)}
-                    </a>
+                    {link.href.startsWith('#') ? (
+                      <Link
+                        to={`/${link.href}`}
+                        onClick={() => setIsOpen(false)}
+                        className="text-5xl md:text-8xl font-bold tracking-tighter hover:text-brand-accent transition-colors"
+                      >
+                        {t(link.key)}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className="text-5xl md:text-8xl font-bold tracking-tighter hover:text-brand-accent transition-colors"
+                      >
+                        {t(link.key)}
+                      </a>
+                    )}
                   </motion.div>
                 ))}
               </div>
@@ -253,12 +280,16 @@ export function Navbar({
                 transition={{ delay: 0.6 }}
                 className="mt-12 flex flex-col md:flex-row md:items-center gap-8"
               >
-                <button className={cn(
-                  "w-full md:w-auto px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group",
-                  theme === 'dark' ? "bg-white text-black" : "bg-black text-white"
-                )}>
+                <Link 
+                  to="/#contact"
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "w-full md:w-auto px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group",
+                    theme === 'dark' ? "bg-white text-black" : "bg-black text-white"
+                  )}
+                >
                   {t('nav.cta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </button>
+                </Link>
                 <div className="flex gap-6">
                   {SOCIALS.map((social) => (
                     <a key={social.name} href={social.href} className="text-text-muted hover:text-text-base transition-colors">

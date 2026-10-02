@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRight, ArrowDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Magnetic } from '../ui/Magnetic';
 import { VisitorGreeting } from '../ui/VisitorGreeting';
 import { ParallaxElement } from '../ui/ParallaxElement';
@@ -162,12 +163,15 @@ export function Hero({ theme, reducedMotion = false }: HeroProps) {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Magnetic>
-              <button className={cn(
-                "px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300",
-                theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
-              )}>
+              <Link 
+                to="/#contact"
+                className={cn(
+                  "px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300",
+                  theme === 'dark' ? "bg-white text-black hover:bg-brand-accent hover:text-white" : "bg-black text-white hover:bg-brand-accent hover:text-white"
+                )}
+              >
                 {t('nav.cta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
             </Magnetic>
             <Magnetic strength={0.2}>
               <button className="border border-border-base hover:border-text-base px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all duration-300">

@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Twitter, Instagram, Linkedin, Github, Send, ArrowUpRight, Share2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useToast } from '../ui/Toast';
 import { Magnetic } from '../ui/Magnetic';
@@ -86,10 +87,10 @@ export function Footer() {
             {['About', 'Services', 'Portfolio', 'Process', 'Careers'].map(link => (
               <li key={link}>
                 <Magnetic strength={0.2}>
-                  <a href={`#${link.toLowerCase()}`} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
+                  <Link to={`/#${link.toLowerCase()}`} className="text-sm text-white/40 hover:text-white transition-colors flex items-center gap-2 group">
                     {link}
                     <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
+                  </Link>
                 </Magnetic>
               </li>
             ))}
@@ -130,10 +131,13 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-        <div className="flex items-center gap-8 text-[10px] font-bold uppercase tracking-widest text-white/20">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-8 gap-y-4 text-[10px] font-bold uppercase tracking-widest text-white/20">
           <span>© 2026 Nexenity Technologies</span>
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <Link to="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link>
+          <Link to="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</Link>
+          <Link to="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

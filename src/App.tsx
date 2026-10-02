@@ -10,9 +10,20 @@
 
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, MotionConfig } from 'motion/react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import { useLanguage } from './contexts/LanguageContext';
 import { useToast } from './components/ui/Toast';
+
+// Legal Content
+import { 
+  PRIVACY_POLICY, 
+  TERMS_OF_SERVICE, 
+  REFUND_POLICY, 
+  COOKIE_POLICY, 
+  DISCLAIMER 
+} from './constants/legal';
+import { LegalPage } from './pages/LegalPage';
 
 // Components
 import { SmoothScroll } from './components/ui/SmoothScroll';
@@ -58,8 +69,17 @@ import { SideNav } from './components/layout/SideNav';
 import { SectionAudio } from './components/ui/SectionAudio';
 
 export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+function AppContent() {
   const activeSection = useActiveSection();
   const { showToast } = useToast();
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -70,6 +90,19 @@ export default function App() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
+
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -188,18 +221,6 @@ export default function App() {
     }
   };
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1] as const
-      }
-    }
-  };
-
   const schemaMarkup = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -225,96 +246,108 @@ export default function App() {
     }
   };
 
+  const isLegalPage = location.pathname !== '/';
+
   return (
     <>
       <MotionConfig reducedMotion={reducedMotion ? "always" : "user"}>
-        <SmoothScroll>
-          <div className="relative selection:bg-brand-accent selection:text-white">
-          <SparklingBackground density={isMobile ? 20 : 40} speed={isMobile ? 0.2 : 0.4} size={isMobile ? 1 : 1.5} />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
-          />
-          <SectionSEO />
-          <ThemeReveal 
-            active={reveal.active} 
-            theme={reveal.theme} 
-            x={reveal.x} 
-            y={reveal.y} 
-            onComplete={() => {}} 
-          />
-          <ReadingProgressBar />
-          <HapticInterface enabled={hapticsEnabled} />
-          <SideNav activeSection={activeSection} theme={theme} />
-          <SectionAudio activeSection={activeSection} />
-          <Navbar 
-            theme={theme} 
-            toggleTheme={toggleTheme} 
-            hapticsEnabled={hapticsEnabled}
-            toggleHaptics={toggleHaptics}
-            reducedMotion={reducedMotion}
-            toggleReducedMotion={toggleReducedMotion}
-          />
-          <ScrollToTop theme={theme} />
-          <AIChatbot theme={theme} />
-          <OfflineIndicator />
+        <Routes>
+          <Route path="/privacy-policy" element={<LegalPage title="Privacy Policy" content={PRIVACY_POLICY} theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/terms" element={<LegalPage title="Terms of Service" content={TERMS_OF_SERVICE} theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/refund-policy" element={<LegalPage title="Refund Policy" content={REFUND_POLICY} theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/cookie-policy" element={<LegalPage title="Cookie Policy" content={COOKIE_POLICY} theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/disclaimer" element={<LegalPage title="Disclaimer" content={DISCLAIMER} theme={theme} toggleTheme={toggleTheme} />} />
           
-          {!reducedMotion && (
-            <Suspense fallback={null}>
-              <SplashCursor 
-                RAINBOW_MODE 
-                SIM_RESOLUTION={isMobile ? 64 : 128} 
-                DYE_RESOLUTION={isMobile ? 512 : 1440} 
-              />
-            </Suspense>
-          )}
-          <motion.main
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <Suspense fallback={<SectionLoader />}>
-              <Hero theme={theme} reducedMotion={reducedMotion} />
-              <Reveal delay={0.1}><Marquee /></Reveal>
-              <ClientCarousel theme={theme} />
-              <About />
-              <SectionDivider />
-              <Services />
-              <SectionDivider />
-              <Portfolio />
-              <SectionDivider />
-              <MotionShowcase />
-              <TechStack />
-              <ImpactSection />
-              <Process />
-              <SectionDivider />
-              <WhyNexenity />
-              <FAQ />
-              <SectionDivider />
-              <Contact />
-              <Footer />
-            </Suspense>
-          </motion.main>
+          <Route path="/" element={
+            <SmoothScroll>
+              <div className="relative selection:bg-brand-accent selection:text-white">
+                <SparklingBackground density={isMobile ? 20 : 40} speed={isMobile ? 0.2 : 0.4} size={isMobile ? 1 : 1.5} />
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
+                />
+                <SectionSEO />
+                <ThemeReveal 
+                  active={reveal.active} 
+                  theme={reveal.theme} 
+                  x={reveal.x} 
+                  y={reveal.y} 
+                  onComplete={() => {}} 
+                />
+                <ReadingProgressBar />
+                <HapticInterface enabled={hapticsEnabled} />
+                <SideNav activeSection={activeSection} theme={theme} />
+                <SectionAudio activeSection={activeSection} />
+                <Navbar 
+                  theme={theme} 
+                  toggleTheme={toggleTheme} 
+                  hapticsEnabled={hapticsEnabled}
+                  toggleHaptics={toggleHaptics}
+                  reducedMotion={reducedMotion}
+                  toggleReducedMotion={toggleReducedMotion}
+                />
+                <ScrollToTop theme={theme} />
+                <AIChatbot theme={theme} />
+                <OfflineIndicator />
+                
+                {!reducedMotion && (
+                  <Suspense fallback={null}>
+                    <SplashCursor 
+                      RAINBOW_MODE 
+                      SIM_RESOLUTION={isMobile ? 64 : 128} 
+                      DYE_RESOLUTION={isMobile ? 512 : 1440} 
+                    />
+                  </Suspense>
+                )}
+                <motion.main
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Suspense fallback={<SectionLoader />}>
+                    <Hero theme={theme} reducedMotion={reducedMotion} />
+                    <Reveal delay={0.1}><Marquee /></Reveal>
+                    <ClientCarousel theme={theme} />
+                    <About />
+                    <SectionDivider />
+                    <Services />
+                    <SectionDivider />
+                    <Portfolio />
+                    <SectionDivider />
+                    <MotionShowcase />
+                    <TechStack />
+                    <ImpactSection />
+                    <Process />
+                    <SectionDivider />
+                    <WhyNexenity />
+                    <FAQ />
+                    <SectionDivider />
+                    <Contact />
+                    <Footer />
+                  </Suspense>
+                </motion.main>
 
-          {/* Global SVG Definitions */}
-          <svg id="global-svg-defs" style={{ visibility: 'hidden', position: 'absolute', width: 0, height: 0 }}>
-            <defs>
-              <filter id="gooey">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
-                <feBlend in="SourceGraphic" in2="goo" />
-              </filter>
-              
-              <linearGradient id="gradient-divider" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#00f3ff" />
-                <stop offset="50%" stopColor="#ff2d95" />
-                <stop offset="100%" stopColor="#00f3ff" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </SmoothScroll>
-    </MotionConfig>
+                {/* Global SVG Definitions */}
+                <svg id="global-svg-defs" style={{ visibility: 'hidden', position: 'absolute', width: 0, height: 0 }}>
+                  <defs>
+                    <filter id="gooey">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                      <feBlend in="SourceGraphic" in2="goo" />
+                    </filter>
+                    
+                    <linearGradient id="gradient-divider" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#00f3ff" />
+                      <stop offset="50%" stopColor="#ff2d95" />
+                      <stop offset="100%" stopColor="#00f3ff" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </SmoothScroll>
+          } />
+        </Routes>
+      </MotionConfig>
     </>
   );
 }
